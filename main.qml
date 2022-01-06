@@ -1,8 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.5
-import QtQuick.Dialogs 1.2
 import Qt.labs.platform 1.1
+import QtQuick.Dialogs 1.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 
@@ -42,11 +42,11 @@ Window {
         id: fileOpenDialog
         title: "Please choose a file"
         nameFilters: ["Bin files (*.bin)"]
-        fileMode: FileDialog.OpenFile
+        selectExisting: true
         onAccepted: {
-            console.log("You chose: " + fileOpenDialog.currentFile)
-            fileSelected(fileOpenDialog.currentFile);
-            txtSourceFilePath.text = fileOpenDialog.currentFile;
+            console.log("You chose: " + fileOpenDialog.fileUrl)
+            fileSelected(fileOpenDialog.fileUrl);
+            txtSourceFilePath.text = fileOpenDialog.fileUrl;
         }
         onRejected: {
             console.log("Canceled")
@@ -58,11 +58,11 @@ Window {
         id: fileSaveDialog
         title: "save file"
         nameFilters: ["Bin files (*.bin)"]
-        fileMode: FileDialog.SaveFile
+        selectExisting: false
         onAccepted: {
-            console.log("You chose: " + fileSaveDialog.currentFile)
-            saveBinary(fileSaveDialog.currentFile, tiBinOffset.text, tiBinLength.text);
-            txtSaveFilePath.text = fileSaveDialog.currentFile;
+            console.log("You chose: " + fileSaveDialog.fileUrl)
+            saveBinary(fileSaveDialog.fileUrl, tiBinOffset.text, tiBinLength.text);
+            txtSaveFilePath.text = fileSaveDialog.fileUrl;
         }
         onRejected: {
             console.log("Canceled")
@@ -204,7 +204,7 @@ Window {
         }
         Text {
             id: text4
-            text: qsTr("Length(dec): ")
+            text: qsTr("WLength(dec): ")
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: tiBinOffset.right
             font.pixelSize: 12

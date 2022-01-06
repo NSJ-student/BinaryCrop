@@ -83,17 +83,17 @@ void BinaryCrop::fileSave(const QString &path, const QString &offset, const QStr
 
     if(iLength == 0)
     {
-        emit log("** error: data length is 0");
+        emit log("** error: data word length is 0");
         return;
     }
-    if(iOffset + iLength > srcData.length())
+    if(iOffset + (iLength*4) > srcData.length())
     {
-        emit log(QString("** error: data out of range / dst_offset=%1, dst_length=%2 / src_length=%3")
-                 .arg(iOffset).arg(iLength).arg(srcData.length()));
+        emit log(QString("** error: data out of range / dst_offset=0x%1, dst_length=%2 / src_length=%3")
+                 .arg(iOffset,0,16).arg(iLength*4).arg(srcData.length()));
         return;
     }
 
-    QByteArray dstData = QByteArray::fromRawData(srcData.data() + iOffset, iLength);
+    QByteArray dstData = QByteArray::fromRawData(srcData.data() + iOffset, iLength*4);
 
     QFile destination(result);
     if(!destination.open(QFile::WriteOnly))
@@ -109,6 +109,6 @@ void BinaryCrop::fileSave(const QString &path, const QString &offset, const QStr
     }
 
     destination.close();
-    emit log(QString("%1 saved : offset=%2, length=%3")
-             .arg(QUrl(result).fileName()).arg(iOffset).arg(iLength));
+    emit log(QString("%1 saved : offset=0x%2, length=%3")
+             .arg(QUrl(result).fileName()).arg(iOffset,0,16).arg(iLength*4));
 }
